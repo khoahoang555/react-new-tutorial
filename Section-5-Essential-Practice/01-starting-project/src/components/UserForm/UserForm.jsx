@@ -14,7 +14,7 @@ export default function UserForm({ onChangeInput }) {
 
   function handleUserInput(fieldName, value) {
     setInvestmentInfo((preInfo) => {
-      preInfo[fieldName] = value;
+      preInfo[fieldName] = +value;
       return preInfo;
     });
 

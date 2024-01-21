@@ -6,15 +6,25 @@ import {useState} from "react";
 
 function App() {
   const [annualData, setAnnualData] = useState([]);
+  const [isValidInput, setIsValidInput] = useState(true);
 
   function handleUserInput(investmentObj) {
+    if (investmentObj.duration < 0) {
+      setIsValidInput(false);
+      return;
+    } else {
+      setIsValidInput(true);
+    }
+
     const isNotNull = Object.values(investmentObj).every(value => {
       return value;
     });
 
     if (isNotNull) {
-      setAnnualData([...calculateInvestmentResults(investmentObj)]);
-      console.log(annualData);
+      setAnnualData((prevData) => {
+        prevData = [...calculateInvestmentResults(investmentObj)];
+        return prevData;
+      });
     }
   }
 
@@ -22,7 +32,8 @@ function App() {
     <main>
       <Header />
       <UserForm onChangeInput={handleUserInput} />
-      <Result annualData={annualData}/>
+      {!isValidInput && <p className="center">Please enter a duration greater than zero.</p>}
+      {isValidInput && <Result annualData={annualData}/>}
     </main>
   )
 }
