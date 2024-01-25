@@ -1,7 +1,11 @@
+import Header from "./components/Header.jsx";
+import ListEmployee from "./components/ListEmployee.jsx";
+
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <div className="container mx-auto my-12">
+      <Header />
+      <ListEmployee />
+    </div>
   )
 }
