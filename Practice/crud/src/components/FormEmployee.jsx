@@ -1,38 +1,41 @@
 import Button from "./Button";
 import Input from "./Input";
-import {useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import Modal from "./Modal.jsx";
 
-export default function FormEmployee({onChangeMode, onAddEmployee, employee}) {
-  const name = useRef();
-  const birthday = useRef();
-  const job = useRef();
-  const modal = useRef();
+export default function FormEmployee({onChangeMode, onAddEmployee, employee, onEditEmployee}) {
+  const modal = useRef(null);
 
-  if (Object.keys(employee).length !== 0) {
-    console.log(employee.name);
-    name.current.value = employee.name;
-    birthday.current.value = employee.birthday;
-    job.current.value = employee.job;
+  const isEditEmployee = Object.values(employee).length !== 0;
+  const [employeeValues, setEmployeeValues] = useState({
+    name: isEditEmployee ? employee.name : '',
+    birthday: isEditEmployee ? employee.birthday : '',
+    job: isEditEmployee ? employee.job : ''
+  });
+
+  function handleChangeValue(field, event) {
+    setEmployeeValues(prevState => {
+      return {
+       ...prevState,
+       [field]: event.target.value
+      }
+    });
   }
 
-  function handleAddEmployee() {
-    const nameValue = name.current.value;
-    const birthdayValue = birthday.current.value;
-    const jobValue = job.current.value;
-    if (nameValue.trim() === '' || birthdayValue.trim() === '' || jobValue.trim() === '') {
+  function handleSaveEmployee() {
+    if (employeeValues.name.trim() === '' || employeeValues.birthday.trim() === '' || employeeValues.job.trim() === '') {
       modal.current.open();
       return;
     }
 
-    const employee = {
-      id: Math.random(),
-      name: nameValue,
-      birthday: birthdayValue,
-      job: jobValue
+    const newEmployee = {
+      id: isEditEmployee ? employee.id : Math.random(),
+      name: employeeValues.name,
+      birthday: employeeValues.birthday,
+      job: employeeValues.job
     }
 
-    onAddEmployee(employee);
+    isEditEmployee ? onEditEmployee(newEmployee) : onAddEmployee(newEmployee);
   }
 
   return (
@@ -44,11 +47,12 @@ export default function FormEmployee({onChangeMode, onAddEmployee, employee}) {
       </Modal>
 
       <div className="max-w-sm mx-auto">
-        <Input label="Name of employee" placeholder="Enter name" ref={name} />
-        <Input label="Birthday" type="date" ref={birthday} />
-        <Input label="Job" placeholder="Enter job" ref={job} />
-        <Button className="bg-green-500 hover:bg-green-700 font-medium text-white w-full justify-center mt-5" onClick={handleAddEmployee}>
-          <p>Add Employee</p>
+        <Input label="Name of employee" placeholder="Enter name" onChange={(e) => handleChangeValue("name", e)} value={employeeValues.name} />
+        <Input label="Birthday" type="date" onChange={(e) => handleChangeValue("birthday", e)} value={employeeValues.birthday} />
+        <Input label="Job" placeholder="Enter job" onChange={(e) => handleChangeValue("job", e)} value={employeeValues.job} />
+
+        <Button className="bg-green-500 hover:bg-green-700 font-medium text-white w-full justify-center mt-5" onClick={handleSaveEmployee}>
+          <p>{isEditEmployee ? "Edit" : "Save"} Employee</p>
         </Button>
         <Button className="bg-gray-400 hover:bg-gray-700 font-medium text-white w-full justify-center mt-3" onClick={() => onChangeMode('list')}>
           <p>Cancel</p>
