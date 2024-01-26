@@ -18,7 +18,6 @@ const Modal = forwardRef(function Modal({severity, children, captionButton}, ref
   const dialog = useRef();
   const currentSeverity = !severity ? SEVERITY['default'] : SEVERITY[severity];
   const className = `bg-${currentSeverity.className}-500 hover:bg-${currentSeverity.className}-700 font-medium text-white w-full justify-center mt-5`;
-  console.log(currentSeverity);
 
   useImperativeHandle(ref, () => {
     return {

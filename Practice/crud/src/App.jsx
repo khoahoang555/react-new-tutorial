@@ -6,21 +6,41 @@ import {useState} from "react";
 export default function App() {
   const [mode, setMode] = useState('list');
   const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState({});
 
   function handleChangeMode(currentMode) {
     setMode(currentMode);
   }
 
-  function handleAddEmployee() {
+  function handleAddEmployee(employee) {
+    handleChangeMode('list')
+    const newEmployee = {...employee};
+    setEmployees(prevState => [...prevState, newEmployee])
+  }
 
+  function handleDeleteEmployee(id) {
+    setEmployees(prevState => prevState.filter((employee) => employee.id !== id));
+  }
+
+  function handleSelectEmployee(id) {
+    let employee = {...employees.find(item => item.id === id)};
+    setSelectedEmployee(employee);
+    handleChangeMode('form');
   }
 
   return (
     <div className="container mx-auto my-12">
       <Header />
       <div className="mt-32"></div>
-      {mode === 'list' && <ListEmployee onChangeMode={handleChangeMode} />}
-      {mode === 'add' && <FormEmployee onChangeMode={handleChangeMode} />}
+      {mode === 'list' && (
+        <ListEmployee
+          onChangeMode={handleChangeMode}
+          employees={employees}
+          onDeleteEmployee={handleDeleteEmployee}
+          onSelectEmployee={handleSelectEmployee}
+        />
+      )}
+      {mode === 'form' && <FormEmployee onChangeMode={handleChangeMode} onAddEmployee={handleAddEmployee} employee={selectedEmployee} />}
     </div>
   )
 }
