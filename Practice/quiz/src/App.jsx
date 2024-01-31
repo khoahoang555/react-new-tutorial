@@ -1,6 +1,14 @@
+import Header from "./components/Header";
+import Quiz from "./components/Quiz";
+import Result from "./components/Result";
+
 function App() {
   return (
-    <h1>Hello world!</h1>
+      <div className="container mx-auto w-3/5">
+        <Header/>
+        {/*<Quiz/>*/}
+        <Result/>
+      </div>
   );
 }
 
