@@ -1,12 +1,14 @@
 export const getQuestionsRandom = (questions) => {
   const result = [];
-  for (let index = 0; index < 10; index++) {
+  const questionsLength = questions.length;
+  const maxSizeQuestions = questionsLength < 10 ? questionsLength : 10;
+
+  while(result.length !== maxSizeQuestions) {
     const indexRandom = Math.floor(Math.random() * questions.length);
     const randomQuestion = questions[indexRandom];
 
     if (result.length === 0) {
       result.push({...randomQuestion});
-      continue;
     }
 
     const addedQuestion = result.some(question => question.id === randomQuestion.id);
@@ -14,4 +16,5 @@ export const getQuestionsRandom = (questions) => {
       result.push({...randomQuestion});
     }
   }
+  return result;
 }
